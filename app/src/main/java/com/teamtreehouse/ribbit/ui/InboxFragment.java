@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.teamtreehouse.ribbit.R;
 import com.teamtreehouse.ribbit.adapters.MessageAdapter;
+import com.teamtreehouse.ribbit.mockdata.MockUsers;
 import com.teamtreehouse.ribbit.models.Message;
 import com.teamtreehouse.ribbit.models.MessageFile;
 import com.teamtreehouse.ribbit.models.Query;
@@ -21,6 +22,7 @@ import com.teamtreehouse.ribbit.models.User;
 import com.teamtreehouse.ribbit.models.callbacks.FindCallback;
 
 import java.util.List;
+import java.util.Random;
 
 public class InboxFragment extends ListFragment {
 
@@ -44,22 +46,31 @@ public class InboxFragment extends ListFragment {
                 R.color.swipeRefresh3,
                 R.color.swipeRefresh4);
 
-        retrieveMessages();
+//        retrieveMessages();
 
         return rootView;
     }
 
     @Override
     public void onResume() {
+        Log.d(TAG,"onResume");
         super.onResume();
 
         getActivity().setProgressBarIndeterminateVisibility(true);
 
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        Log.d(TAG,"onViewCreated");
+        retrieveMessages();
+    }
+
     private void retrieveMessages() {
         Query<Message> query = Message.getQuery();
-        query.whereEqualTo(Message.KEY_RECIPIENT_IDS, User.getCurrentUser().getObjectId());
+        int randomUserIndex = new Random().nextInt(MockUsers.testUsers.size());
+        User user = MockUsers.testUsers.get(randomUserIndex);
+        query.whereEqualTo(Message.KEY_RECIPIENT_IDS, user.getObjectId());
         query.addDescendingOrder(Message.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Message>() {
             @Override
@@ -96,6 +107,7 @@ public class InboxFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        Log.d(TAG,"onListItemClick");
         super.onListItemClick(l, v, position, id);
 
         Message message = mMessages.get(position);

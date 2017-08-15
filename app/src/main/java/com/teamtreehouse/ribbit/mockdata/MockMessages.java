@@ -73,7 +73,7 @@ public class MockMessages {
         photoMessage.put(Message.KEY_SENDER_NAME, sender.getUsername());
 
         ArrayList<String> recipientIds = new ArrayList<>();
-        recipientIds.add(sender.getObjectId());       //<---Issue adding user id to recipientIds
+        recipientIds.add(sender.getObjectId());
         photoMessage.put(Message.KEY_RECIPIENT_IDS, recipientIds);
 
         photoMessage.put(Message.KEY_FILE_TYPE, Message.TYPE_IMAGE);

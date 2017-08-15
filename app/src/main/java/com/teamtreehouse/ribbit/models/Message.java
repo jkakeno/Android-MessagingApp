@@ -2,12 +2,14 @@ package com.teamtreehouse.ribbit.models;
 
 
 import com.teamtreehouse.ribbit.mockdata.MockMessages;
+import com.teamtreehouse.ribbit.mockdata.MockUsers;
 import com.teamtreehouse.ribbit.models.callbacks.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class Message implements Comparable<Message> {
@@ -86,7 +88,9 @@ public class Message implements Comparable<Message> {
 
     public static Query<Message> getQuery() {
         Query<Message> query = new Query<Message>(Message.class.getSimpleName());
-        query.setDataSet(MockMessages.getInstance().getMessagesForUser(User.getCurrentUser().getObjectId()));
+        int randomUserIndex = new Random().nextInt(MockUsers.testUsers.size());
+        User user = MockUsers.testUsers.get(randomUserIndex);
+        query.setDataSet(MockMessages.getInstance().getMessagesForUser(user.getObjectId()));
         return query;
     }
 }

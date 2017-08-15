@@ -31,6 +31,7 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView");
         View rootView = inflater.inflate(R.layout.user_grid,
                 container, false);
 
@@ -44,6 +45,7 @@ public class FriendsFragment extends Fragment {
 
     @Override
     public void onResume() {
+        Log.d(TAG,"onResume");
         super.onResume();
 
         mCurrentUser = User.getCurrentUser();
@@ -52,7 +54,7 @@ public class FriendsFragment extends Fragment {
         getActivity().setProgressBarIndeterminateVisibility(true);
 
 
-        Query<User> query = mFriendsRelation.getQuery();
+        Query<User> query = Relation.getQuery();
         query.addAscendingOrder(User.KEY_USER_ID);
         query.findInBackground(new FindCallback<User>() {
             @Override
@@ -63,6 +65,7 @@ public class FriendsFragment extends Fragment {
                     mFriends = friends;
 
                     String[] usernames = new String[mFriends.size()];
+                    Log.d(TAG, String.valueOf(mFriends.size()));
                     int i = 0;
                     for (User user : mFriends) {
                         usernames[i] = user.getUsername();

@@ -46,6 +46,7 @@ public class RecipientsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.user_grid);
@@ -65,6 +66,7 @@ public class RecipientsActivity extends Activity {
 
     @Override
     public void onResume() {
+        Log.d(TAG,"onResume");
         super.onResume();
 
         mCurrentUser = User.getCurrentUser();
@@ -119,6 +121,7 @@ public class RecipientsActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG,"onCreateOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.recipients, menu);
         mSendMenuItem = menu.getItem(0);
@@ -127,6 +130,7 @@ public class RecipientsActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG,"onOptionsItemSelected");
         switch (item.getItemId()) {
             case android.R.id.home:
                 // This ID represents the Home or Up button. In the case of this

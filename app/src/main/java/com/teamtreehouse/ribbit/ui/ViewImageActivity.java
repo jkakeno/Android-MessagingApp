@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
@@ -15,8 +16,11 @@ import java.util.TimerTask;
 
 public class ViewImageActivity extends Activity {
 
+    private static final String TAG =ViewImageActivity.class.getSimpleName() ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_image);
         // Show the Up button in the action bar.
@@ -48,6 +52,7 @@ public class ViewImageActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG,"onOptionItemSelected");
         switch (item.getItemId()) {
             case android.R.id.home:
                 // This ID represents the Home or Up button. In the case of this

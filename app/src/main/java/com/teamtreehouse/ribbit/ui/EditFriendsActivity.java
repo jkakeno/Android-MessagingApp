@@ -36,6 +36,7 @@ public class EditFriendsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.user_grid);
@@ -52,6 +53,7 @@ public class EditFriendsActivity extends Activity {
 
     @Override
     protected void onResume() {
+        Log.d(TAG,"onResume");
         super.onResume();
 
         mCurrentUser = User.getCurrentUser();
@@ -71,6 +73,7 @@ public class EditFriendsActivity extends Activity {
                     // Success
                     mUsers = users;
                     String[] usernames = new String[mUsers.size()];
+                    Log.d(TAG, String.valueOf(mUsers.size()));
                     int i = 0;
                     for (User user : mUsers) {
                         usernames[i] = user.getUsername();
@@ -108,6 +111,7 @@ public class EditFriendsActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG,"onOptionItemSelected");
         switch (item.getItemId()) {
             case android.R.id.home:
                 // This ID represents the Home or Up button. In the case of this
@@ -124,6 +128,7 @@ public class EditFriendsActivity extends Activity {
     }
 
     private void addFriendCheckmarks() {
+        Log.d(TAG,"addFriendCheckmarks");
         mFriendsRelation.getQuery().findInBackground(new FindCallback<User>() {
             @Override
             public void done(List<User> friends, Exception e) {
@@ -153,7 +158,11 @@ public class EditFriendsActivity extends Activity {
 
             if (mGridView.isItemChecked(position)) {
                 // add the friend
-                mFriendsRelation.add(mUsers.get(position));
+                mFriendsRelation.add(mUsers.get(position)); //<---mFriendsRelation is always the same
+                Log.d(TAG, String.valueOf(mFriendsRelation));
+                Log.d(TAG, String.valueOf(position));
+                Log.d(TAG, String.valueOf(mUsers));
+                Log.d(TAG, String.valueOf(mUsers.get(position)));
                 checkImageView.setVisibility(View.INVISIBLE);
             } else {
                 // remove the friend
