@@ -56,7 +56,7 @@ public class SignUpActivity extends Activity {
                 password = password.trim();
                 email = email.trim();
 
-                if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
+                if (username.isEmpty() || email.isEmpty()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
                     builder.setMessage(R.string.signup_error_message)
                             .setTitle(R.string.signup_error_title)

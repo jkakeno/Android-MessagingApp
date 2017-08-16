@@ -46,8 +46,7 @@ public class MainActivity extends FragmentActivity implements
 
     protected Uri mMediaUri;
 
-    protected DialogInterface.OnClickListener mDialogListener =
-            new DialogInterface.OnClickListener() {
+    protected DialogInterface.OnClickListener mDialogListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
@@ -189,8 +188,7 @@ public class MainActivity extends FragmentActivity implements
         // When swiping between different sections, select the corresponding
         // tab. We can also use ActionBar.Tab#select() to do this if we have
         // a reference to the Tab.
-        mViewPager
-                .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                     @Override
                     public void onPageSelected(int position) {
                         actionBar.setSelectedNavigationItem(position);
@@ -211,6 +209,7 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
@@ -278,6 +277,7 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG,"onCreateOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -285,6 +285,7 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG,"onOptionsItemSelected");
         int itemId = item.getItemId();
 
         switch (itemId) {
@@ -308,20 +309,20 @@ public class MainActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab,
-                              FragmentTransaction fragmentTransaction) {
+    public void onTabSelected(ActionBar.Tab tab,FragmentTransaction fragmentTransaction) {
+        Log.d(TAG,"onTabSelected");
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
-    public void onTabUnselected(ActionBar.Tab tab,
-                                FragmentTransaction fragmentTransaction) {
+    public void onTabUnselected(ActionBar.Tab tab,FragmentTransaction fragmentTransaction) {
+        Log.d(TAG,"onTabUnselected");
     }
 
     @Override
-    public void onTabReselected(ActionBar.Tab tab,
-                                FragmentTransaction fragmentTransaction) {
+    public void onTabReselected(ActionBar.Tab tab,FragmentTransaction fragmentTransaction) {
+        Log.d(TAG,"onTabReselected");
     }
 }

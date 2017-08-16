@@ -53,9 +53,9 @@ public class LoginActivity extends Activity {
                 username = username.trim();
                 password = password.trim();
 
-                if (username.isEmpty()) {
+                if (username.isEmpty()|| password.isEmpty()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setMessage(R.string.login_error_message)
+                    builder .setMessage(R.string.login_error_message)
                             .setTitle(R.string.login_error_title)
                             .setPositiveButton(android.R.string.ok, null);
                     AlertDialog dialog = builder.create();

@@ -61,8 +61,7 @@ public class UserAdapter extends ArrayAdapter<User> {
         } else {
             email = email.toLowerCase();
             String hash = MD5Util.md5Hex(email);
-            String gravatarUrl = "http://www.gravatar.com/avatar/" + hash +
-                    "?s=204&d=404";
+            String gravatarUrl = "http://www.gravatar.com/avatar/" + hash + "?s=204&d=404";
             Picasso.with(mContext)
                     .load(gravatarUrl)
                     .placeholder(R.drawable.avatar_empty)

@@ -22,6 +22,10 @@ public class Relation<T> {
         relatedItems.remove(item);
     }
 
+    public int size() {
+        return relatedItems.size();
+    }
+
     public static Query getQuery() {
         Query query = new Query(Relation.class.getSimpleName());
         query.setDataSet(relatedItems);

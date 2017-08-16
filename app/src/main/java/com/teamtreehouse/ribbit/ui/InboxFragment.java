@@ -31,8 +31,7 @@ public class InboxFragment extends ListFragment {
     protected SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         Log.d(TAG,"onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_inbox,
                 container, false);

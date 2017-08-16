@@ -1,5 +1,8 @@
 package com.teamtreehouse.ribbit.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.teamtreehouse.ribbit.mockdata.MockRelations;
 import com.teamtreehouse.ribbit.mockdata.MockUsers;
 import com.teamtreehouse.ribbit.models.callbacks.LogInCallback;
@@ -8,7 +11,7 @@ import com.teamtreehouse.ribbit.models.callbacks.SignUpCallback;
 
 import java.util.UUID;
 
-public class User implements Comparable<User> {
+public class User implements Comparable<User>,Parcelable {
 
     // Field names
     public static final String KEY_USER_ID = "userId";
@@ -32,6 +35,24 @@ public class User implements Comparable<User> {
         this.password = password;
         this.email = email;
     }
+//Parcelable method
+    protected User(Parcel in) {
+        username = in.readString();
+        password = in.readString();
+        email = in.readString();
+    }
+//Parcelable creator
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public void setUsername(String username) {
         this.username = username;
@@ -133,5 +154,17 @@ public class User implements Comparable<User> {
     public int compareTo(User another) {
         String compareUserName = ((User)another).getUsername();
         return this.getUsername().toLowerCase().compareTo(compareUserName.toLowerCase());
+    }
+//Parcelable method
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+//Parcelable method
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(username);
+        parcel.writeString(password);
+        parcel.writeString(email);
     }
 }

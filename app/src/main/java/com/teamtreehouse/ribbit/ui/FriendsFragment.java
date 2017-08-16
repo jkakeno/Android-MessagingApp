@@ -29,11 +29,9 @@ public class FriendsFragment extends Fragment {
     protected GridView mGridView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG,"onCreateView");
-        View rootView = inflater.inflate(R.layout.user_grid,
-                container, false);
+        View rootView = inflater.inflate(R.layout.user_grid, container, false);
 
         mGridView = (GridView) rootView.findViewById(R.id.friendsGrid);
 
@@ -49,8 +47,10 @@ public class FriendsFragment extends Fragment {
         super.onResume();
 
         mCurrentUser = User.getCurrentUser();
-        mFriendsRelation = mCurrentUser.getRelation(User.KEY_FRIENDS_RELATION);
-
+//        mFriendsRelation = mCurrentUser.getRelation(User.KEY_FRIENDS_RELATION); //<-- Returns a list of users which size is ramdom between 1 and the number of MockUsers. Follow User.getRelation and MockRelations.getUserRelations
+        mFriendsRelation = new Relation<>();
+        mFriendsRelation.add(User.getCurrentUser()); //Just to try currently only adds current user at onResume to the FriendFragment
+//TODO: Need to find out how to get the mFriendRelation list from EditFriendsActivity
         getActivity().setProgressBarIndeterminateVisibility(true);
 
 
@@ -62,7 +62,7 @@ public class FriendsFragment extends Fragment {
                 getActivity().setProgressBarIndeterminateVisibility(false);
 
                 if (e == null) {
-                    mFriends = friends;
+                    mFriends = friends;     //<-- mFriends should be filled according to EditFriendsActivity
 
                     String[] usernames = new String[mFriends.size()];
                     Log.d(TAG, String.valueOf(mFriends.size()));
@@ -72,9 +72,11 @@ public class FriendsFragment extends Fragment {
                         i++;
                     }
                     if (mGridView.getAdapter() == null) {
-                        UserAdapter adapter = new UserAdapter(getActivity(), mFriends);
+                        Log.d(TAG,"adapter is null");
+                        UserAdapter adapter = new UserAdapter(getActivity(), mFriends); //<-- CHECK list of user get added to FriendsFragment unconditionaly always the same users mFriends
                         mGridView.setAdapter(adapter);
                     } else {
+                        Log.d(TAG,"adapter is not null");
                         ((UserAdapter) mGridView.getAdapter()).refill(mFriends);
                     }
                 } else {
