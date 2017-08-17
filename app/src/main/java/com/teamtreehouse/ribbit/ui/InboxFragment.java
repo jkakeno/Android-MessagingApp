@@ -38,7 +38,6 @@ public class InboxFragment extends ListFragment {
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
-        // Deprecated method - what should we call instead?
         mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.swipeRefresh1,
                 R.color.swipeRefresh2,
@@ -66,6 +65,7 @@ public class InboxFragment extends ListFragment {
     }
 
     private void retrieveMessages() {
+        Log.d(TAG,"retrieveMessages");
         Query<Message> query = Message.getQuery();
         int randomUserIndex = new Random().nextInt(MockUsers.testUsers.size());
         User user = MockUsers.testUsers.get(randomUserIndex);
@@ -82,6 +82,7 @@ public class InboxFragment extends ListFragment {
 
                 if (e == null) {
                     // We found messages!
+                    Log.d(TAG,"found messages");
                     mMessages = messages;
 
                     String[] usernames = new String[mMessages.size()];
@@ -89,14 +90,17 @@ public class InboxFragment extends ListFragment {
                     for (Message message : mMessages) {
                         usernames[i] = message.getString(Message.KEY_SENDER_NAME);
                         i++;
+                        Log.d(TAG, "Message from: " + message.getString(Message.KEY_SENDER_NAME));
                     }
                     if (getListView().getAdapter() == null) {
+                        Log.d(TAG,"message adapter is null");
                         MessageAdapter adapter = new MessageAdapter(
                                 getListView().getContext(),
                                 mMessages);
                         setListAdapter(adapter);
                     } else {
                         // refill the adapter!
+                        Log.d(TAG,"refill the message adapter");
                         ((MessageAdapter) getListView().getAdapter()).refill(mMessages);
                     }
                 }

@@ -134,8 +134,7 @@ public class MainActivity extends FragmentActivity implements
 
                 private boolean isExternalStorageAvailable() {
                     String state = Environment.getExternalStorageState();
-
-                    if (!state.equals(Environment.MEDIA_MOUNTED)) {
+                    if (state.equals(Environment.MEDIA_MOUNTED)) {
                         return true;
                     } else {
                         return false;
@@ -268,11 +267,19 @@ public class MainActivity extends FragmentActivity implements
             Toast.makeText(this, R.string.general_error, Toast.LENGTH_LONG).show();
         }
     }
+//Disable "back" in the fragments
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG,"onBackPressed");
+    }
 
     private void navigateToLogin() {
+        Log.d(TAG,"navigateToLogin");
         Intent intent = new Intent(this, LoginActivity.class);
-        // change this intent so that the user can't hit "back" and get into the inbox
         startActivity(intent);
+// TODO: prevent user to get into the inbox by hit "back"
+//        finish(); //Can't simply finish the activity because it creates other issues such as app is closed, null pointer exception when user selects camera-> Take Picture->Back button.
+
     }
 
     @Override

@@ -11,6 +11,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" >
 
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/inbox_vertical_margin">
+        </ListView>
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
@@ -20,14 +30,9 @@
         android:padding="@dimen/activity_horizontal_margin"
         android:text="@string/empty_inbox_label" />
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/inbox_vertical_margin">
-    </ListView>
+
+
+
+
 
 </RelativeLayout>

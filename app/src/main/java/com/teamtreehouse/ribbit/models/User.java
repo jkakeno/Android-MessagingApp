@@ -2,6 +2,7 @@ package com.teamtreehouse.ribbit.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.teamtreehouse.ribbit.mockdata.MockRelations;
 import com.teamtreehouse.ribbit.mockdata.MockUsers;
@@ -17,6 +18,7 @@ public class User implements Comparable<User>,Parcelable {
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_FRIENDS_RELATION = "friendsRelation";
+    private static final String TAG = User.class.getSimpleName();
 
     private static User currentUser;
 
@@ -115,6 +117,7 @@ public class User implements Comparable<User>,Parcelable {
     }
 
     public static void logOut() {
+        Log.d(TAG,"Logged out");
         currentUser = null;
     }
 
