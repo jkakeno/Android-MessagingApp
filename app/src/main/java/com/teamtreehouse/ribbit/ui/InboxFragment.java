@@ -31,7 +31,7 @@ public class InboxFragment extends ListFragment {
     protected SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
         Log.d(TAG,"onCreateView");
         View rootView = inflater.inflate(R.layout.fragment_inbox,
                 container, false);
@@ -53,9 +53,7 @@ public class InboxFragment extends ListFragment {
     public void onResume() {
         Log.d(TAG,"onResume");
         super.onResume();
-
         getActivity().setProgressBarIndeterminateVisibility(true);
-
     }
 
     @Override
@@ -82,27 +80,30 @@ public class InboxFragment extends ListFragment {
 
                 if (e == null) {
                     // We found messages!
-                    Log.d(TAG,"found messages");
-                    mMessages = messages;
 
-                    String[] usernames = new String[mMessages.size()];
+                    mMessages = messages;
+                    Log.d(TAG,"Found " + mMessages.size() + " messages");
+
+                    String[] senderNames = new String[mMessages.size()];
                     int i = 0;
                     for (Message message : mMessages) {
-                        usernames[i] = message.getString(Message.KEY_SENDER_NAME);
+                        senderNames[i] = message.getString(Message.KEY_SENDER_NAME);
                         i++;
                         Log.d(TAG, "Message from: " + message.getString(Message.KEY_SENDER_NAME));
                     }
-                    if (getListView().getAdapter() == null) {
-                        Log.d(TAG,"message adapter is null");
-                        MessageAdapter adapter = new MessageAdapter(
-                                getListView().getContext(),
-                                mMessages);
-                        setListAdapter(adapter);
-                    } else {
-                        // refill the adapter!
-                        Log.d(TAG,"refill the message adapter");
-                        ((MessageAdapter) getListView().getAdapter()).refill(mMessages);
-                    }
+
+                    MessageAdapter adapter = new MessageAdapter(getListView().getContext(), mMessages);
+                    setListAdapter(adapter);
+
+/*Doesn't display messages*/
+//                    if (getListView().getAdapter() == null) {
+//                        Log.d(TAG, "List view adapter is " + getListView().getAdapter() + " so create adapter and fill it with " + mMessages.size() + " messages");
+//                        MessageAdapter adapter = new MessageAdapter(getListView().getContext(), mMessages);
+//                        setListAdapter(adapter);
+//                    }else{
+//                        Log.d(TAG, "Refill the adapter with " + mMessages.size() + " messages");
+//                        ((MessageAdapter) getListView().getAdapter()).refill(mMessages);
+//                    }
                 }
             }
         });

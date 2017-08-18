@@ -22,6 +22,8 @@ import com.teamtreehouse.ribbit.adapters.SectionsPagerAdapter;
 import com.teamtreehouse.ribbit.models.Message;
 import com.teamtreehouse.ribbit.models.User;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -163,6 +165,8 @@ public class MainActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
+//Initiate Joda time library
+        JodaTimeAndroid.init(this);
 
         User currentUser = User.getCurrentUser();
         if (currentUser == null) {
@@ -277,8 +281,7 @@ public class MainActivity extends FragmentActivity implements
         Log.d(TAG,"navigateToLogin");
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-// TODO: prevent user to get into the inbox by hit "back"
-//        finish(); //Can't simply finish the activity because it creates other issues such as app is closed, null pointer exception when user selects camera-> Take Picture->Back button.
+        finish(); //Finishing the activity causes the app to close because there's no activity to move to after pressing back button in login screen
 
     }
 
