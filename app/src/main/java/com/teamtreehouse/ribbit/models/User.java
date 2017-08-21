@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class User implements Comparable<User>,Parcelable {
 
-    // Field names
+// Field names
     public static final String KEY_USER_ID = "userId";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_FRIENDS_RELATION = "friendsRelation";
@@ -37,14 +37,30 @@ public class User implements Comparable<User>,Parcelable {
         this.password = password;
         this.email = email;
     }
+
+//Parcelable method
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(username);
+        parcel.writeString(password);
+        parcel.writeString(email);
+    }
+
 //Parcelable method
     protected User(Parcel in) {
         username = in.readString();
         password = in.readString();
         email = in.readString();
     }
+
+//Parcelable method
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
 //Parcelable creator
-    public static final Creator<User> CREATOR = new Creator<User>() {
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
             return new User(in);
@@ -158,16 +174,5 @@ public class User implements Comparable<User>,Parcelable {
         String compareUserName = ((User)another).getUsername();
         return this.getUsername().toLowerCase().compareTo(compareUserName.toLowerCase());
     }
-//Parcelable method
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-//Parcelable method
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(username);
-        parcel.writeString(password);
-        parcel.writeString(email);
-    }
+
 }
