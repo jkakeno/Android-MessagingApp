@@ -2,6 +2,7 @@ package com.teamtreehouse.ribbit.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,12 +36,14 @@ public class EditFriendsActivity extends Activity {
 
     protected List<User> mUsers;
 
+    Button mConfirm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.user_grid);
+        setContentView(R.layout.edit_friends);
         // Show the Up button in the action bar.
         setupActionBar();
 
@@ -49,6 +53,19 @@ public class EditFriendsActivity extends Activity {
 
         TextView emptyTextView = (TextView) findViewById(android.R.id.empty);
         mGridView.setEmptyView(emptyTextView);
+        mConfirm = (Button) findViewById(R.id.confirm_button);
+
+        mConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "mFriendRelation size in EditFriendsActivity is : "+mFriendsRelation.size());
+                Intent intent = new Intent();
+                intent.putExtra("FRIEND_LIST", mFriendsRelation);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                setResult(RESULT_OK,intent);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -103,15 +120,18 @@ public class EditFriendsActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "mFriendRelation size: "+mFriendsRelation.size());
-//        Intent intent = new Intent(EditFriendsActivity.this,FriendsFragment.class);
-//        intent.putExtra("FRIEND_LIST", (Parcelable) mFriendsRelation);
-//        startActivity(intent);
-        Bundle bundle = new Bundle();
-        FriendsFragment fragment = new FriendsFragment();
-        bundle.putParcelableArrayList("FRIEND_LIST", mFriendsRelation);
-        fragment.setArguments(bundle);
+//        Log.d(TAG, "mFriendRelation size: "+mFriendsRelation.size());
+//        Intent intent = new Intent();
+//        intent.putExtra("FRIEND_LIST", mFriendsRelation);
+//        setResult(RESULT_OK,intent);
+//        finish();
+//        Bundle bundle = new Bundle();
+//        FriendsFragment fragment = new FriendsFragment();
+//        bundle.putParcelableArrayList("FRIEND_LIST", mFriendsRelation);
+//        fragment.setArguments(bundle);
     }
+
+
 
     /**
      * Set up the {@link android.app.ActionBar}.

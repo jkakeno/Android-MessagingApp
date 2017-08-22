@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.teamtreehouse.ribbit.R;
 import com.teamtreehouse.ribbit.adapters.SectionsPagerAdapter;
-import com.teamtreehouse.ribbit.models.Message;
 import com.teamtreehouse.ribbit.models.User;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -29,7 +28,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+
+/*Send data between activity resource: https://stackoverflow.com/questions/920306/sending-data-back-to-the-main-activity-in-android/40969871#40969871*/
 
 public class MainActivity extends FragmentActivity implements
         ActionBar.TabListener {
@@ -44,7 +46,10 @@ public class MainActivity extends FragmentActivity implements
     public static final int MEDIA_TYPE_IMAGE = 4;
     public static final int MEDIA_TYPE_VIDEO = 5;
 
+    public static final int EDIT_FRIENDS_REQUEST = 6;
+
     public static final int FILE_SIZE_LIMIT = 1024 * 1024 * 10; // 10 MB
+
 
     protected Uri mMediaUri;
 
@@ -159,6 +164,8 @@ public class MainActivity extends FragmentActivity implements
      */
     ViewPager mViewPager;
 
+    ArrayList<User> mFriendsRelation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG,"onCreate");
@@ -214,8 +221,16 @@ public class MainActivity extends FragmentActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG,"onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG,"Request code is: " + requestCode);
+        Log.d(TAG,"Result code is: " + resultCode);
 
         if (resultCode == RESULT_OK) {
+            if(requestCode == EDIT_FRIENDS_REQUEST){
+                mFriendsRelation = data.getParcelableArrayListExtra("FRIEND_LIST");
+                Log.d(TAG, "mFriendsRelation size in MainActivity is: " + mFriendsRelation.size());
+
+            }
+
             if (requestCode == PICK_PHOTO_REQUEST || requestCode == PICK_VIDEO_REQUEST) {
                 if (data == null) {
                     Toast.makeText(this, getString(R.string.general_error), Toast.LENGTH_LONG).show();
@@ -255,19 +270,18 @@ public class MainActivity extends FragmentActivity implements
                 sendBroadcast(mediaScanIntent);
             }
 
-            Intent recipientsIntent = new Intent(this, RecipientsActivity.class);
-            recipientsIntent.setData(mMediaUri);
+//            Intent recipientsIntent = new Intent(this, RecipientsActivity.class);
+//            recipientsIntent.setData(mMediaUri);
+//            String fileType;
+//            if (requestCode == PICK_PHOTO_REQUEST || requestCode == TAKE_PHOTO_REQUEST) {
+//                fileType = Message.TYPE_IMAGE;
+//            } else {
+//                fileType = Message.TYPE_VIDEO;
+//            }
+//            recipientsIntent.putExtra(Message.KEY_FILE_TYPE, fileType);
+//            startActivity(recipientsIntent);
 
-            String fileType;
-            if (requestCode == PICK_PHOTO_REQUEST || requestCode == TAKE_PHOTO_REQUEST) {
-                fileType = Message.TYPE_IMAGE;
-            } else {
-                fileType = Message.TYPE_VIDEO;
-            }
-
-            recipientsIntent.putExtra(Message.KEY_FILE_TYPE, fileType);
-            startActivity(recipientsIntent);
-        } else if (resultCode != RESULT_CANCELED) {
+        } else if (resultCode == RESULT_CANCELED) {
             Toast.makeText(this, R.string.general_error, Toast.LENGTH_LONG).show();
         }
     }
@@ -305,7 +319,7 @@ public class MainActivity extends FragmentActivity implements
                 break;
             case R.id.action_edit_friends:
                 Intent intent = new Intent(this, EditFriendsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,EDIT_FRIENDS_REQUEST);
                 break;
             case R.id.action_camera:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
