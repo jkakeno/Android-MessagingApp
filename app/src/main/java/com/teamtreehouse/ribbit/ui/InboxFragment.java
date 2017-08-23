@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.teamtreehouse.ribbit.R;
@@ -24,11 +25,13 @@ import com.teamtreehouse.ribbit.models.callbacks.FindCallback;
 import java.util.List;
 import java.util.Random;
 
+
 public class InboxFragment extends ListFragment {
 
     private static final String TAG = InboxFragment.class.getSimpleName();
     protected List<Message> mMessages;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
+    ImageButton mFab;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
@@ -44,6 +47,16 @@ public class InboxFragment extends ListFragment {
                 R.color.swipeRefresh4);
 
 //        retrieveMessages();
+
+        mFab = (ImageButton) rootView.findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"Create text");
+                Intent intent = new Intent(getActivity(),SMSActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }
