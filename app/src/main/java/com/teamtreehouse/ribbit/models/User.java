@@ -26,6 +26,7 @@ public class User implements Comparable<User>,Parcelable {
     private String username;
     private String password;
     private String email;
+    public boolean state;
 
     public User() {
         id = UUID.randomUUID();
@@ -175,4 +176,11 @@ public class User implements Comparable<User>,Parcelable {
         return this.getUsername().toLowerCase().compareTo(compareUserName.toLowerCase());
     }
 
+    public boolean getCheckState() {
+        return state;
+    }
+
+    public void setCheckState(boolean state){
+        this.state = state;
+    }
 }

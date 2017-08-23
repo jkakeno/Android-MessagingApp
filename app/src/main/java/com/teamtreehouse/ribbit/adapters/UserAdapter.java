@@ -77,6 +77,12 @@ public class UserAdapter extends ArrayAdapter<User> {
             holder.checkImageView.setVisibility(View.INVISIBLE);
         }
 
+        if(user.getCheckState()){
+            holder.checkImageView.setVisibility(View.VISIBLE);
+        }else {
+            holder.checkImageView.setVisibility(View.INVISIBLE);
+        }
+
         return convertView;
     }
 

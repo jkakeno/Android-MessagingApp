@@ -86,6 +86,7 @@ public class EditFriendsActivity extends Activity{
             public void done(List<User> users, Exception e) {
                 setProgressBarIndeterminateVisibility(false);
                 if (e == null) {
+
                     // Success
                     mUsers = users;
                     UserAdapter adapter = new UserAdapter(EditFriendsActivity.this, mUsers);
@@ -134,18 +135,22 @@ public class EditFriendsActivity extends Activity{
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
             ImageView checkImageView = (ImageView) view.findViewById(R.id.checkImageView);
-
+            Log.d(TAG,"User check state is: "+mUsers.get(position).state);
+            Log.d(TAG,"Item is checked : "+mGridView.isItemChecked(position));
             if (mGridView.isItemChecked(position)) {
-                // add the friend
-                mFriends.add(mUsers.get(position));
-                checkImageView.setVisibility(View.VISIBLE);
-                Log.d(TAG, "add user " + mUsers.get(position).getUsername() + " to mFriends");
 
+                    // add the friend
+                    mFriends.add(mUsers.get(position));
+                    checkImageView.setVisibility(View.VISIBLE);
+                    mUsers.get(position).setCheckState(true);
+                    Log.d(TAG, "add user " + mUsers.get(position).getUsername() + " to mFriends");
             } else {
-                // remove the friend
-                mFriends.remove(mUsers.get(position));
-                checkImageView.setVisibility(View.INVISIBLE);
-                Log.d(TAG, "remove user " + mUsers.get(position).getUsername() + " from mFriends");
+
+                    // remove the friend
+                    mFriends.remove(mUsers.get(position));
+                    checkImageView.setVisibility(View.INVISIBLE);
+                    mUsers.get(position).setCheckState(false);
+                    Log.d(TAG, "remove user " + mUsers.get(position).getUsername() + " from mFriends");
             }
 
             mCurrentUser.saveInBackground(new SaveCallback() {
