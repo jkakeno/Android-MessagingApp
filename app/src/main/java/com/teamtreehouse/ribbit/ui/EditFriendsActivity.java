@@ -26,9 +26,9 @@ import com.teamtreehouse.ribbit.models.callbacks.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditFriendsActivity extends Activity {
+public class EditFriendsActivity extends Activity{
 
-    protected ArrayList<User> mFriendsRelation;
+    protected ArrayList<User> mFriends = new ArrayList<>();
     protected User mCurrentUser;
     protected GridView mGridView;
 
@@ -37,6 +37,7 @@ public class EditFriendsActivity extends Activity {
     protected List<User> mUsers;
 
     Button mConfirm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +59,9 @@ public class EditFriendsActivity extends Activity {
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "mFriendRelation size in EditFriendsActivity is : "+mFriendsRelation.size());
+                Log.d(TAG, "mFriends size in EditFriendsActivity is : "+ mFriends.size());
                 Intent intent = new Intent();
-                intent.putExtra("FRIEND_LIST", mFriendsRelation);
+                intent.putExtra("FRIEND_LIST", mFriends);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 setResult(RESULT_OK,intent);
                 finish();
@@ -74,8 +75,6 @@ public class EditFriendsActivity extends Activity {
         super.onResume();
 
         mCurrentUser = User.getCurrentUser();
-        mFriendsRelation = new ArrayList<>();
-
 
         setProgressBarIndeterminateVisibility(true);
 
@@ -86,24 +85,11 @@ public class EditFriendsActivity extends Activity {
             @Override
             public void done(List<User> users, Exception e) {
                 setProgressBarIndeterminateVisibility(false);
-
                 if (e == null) {
                     // Success
                     mUsers = users;
-                    String[] usernames = new String[mUsers.size()];
-                    Log.d(TAG, String.valueOf(mUsers.size()));
-                    int i = 0;
-                    for (User user : mUsers) {
-                        usernames[i] = user.getUsername();
-                        i++;
-                    }
-                    if (mGridView.getAdapter() == null) {
-                        UserAdapter adapter = new UserAdapter(EditFriendsActivity.this, mUsers);
-                        mGridView.setAdapter(adapter);
-                    } else {
-                        ((UserAdapter) mGridView.getAdapter()).refill(mUsers);
-                    }
-
+                    UserAdapter adapter = new UserAdapter(EditFriendsActivity.this, mUsers);
+                    mGridView.setAdapter(adapter);
                 } else {
                     Log.e(TAG, e.getMessage());
                     AlertDialog.Builder builder = new AlertDialog.Builder(EditFriendsActivity.this);
@@ -116,22 +102,6 @@ public class EditFriendsActivity extends Activity {
             }
         });
     }
-//Add to pass the mFriendRelation list to FriendFragment.java
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        Log.d(TAG, "mFriendRelation size: "+mFriendsRelation.size());
-//        Intent intent = new Intent();
-//        intent.putExtra("FRIEND_LIST", mFriendsRelation);
-//        setResult(RESULT_OK,intent);
-//        finish();
-//        Bundle bundle = new Bundle();
-//        FriendsFragment fragment = new FriendsFragment();
-//        bundle.putParcelableArrayList("FRIEND_LIST", mFriendsRelation);
-//        fragment.setArguments(bundle);
-    }
-
-
 
     /**
      * Set up the {@link android.app.ActionBar}.
@@ -160,32 +130,6 @@ public class EditFriendsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-//DON"T NEED THIS METHOD TO ADD CHECK MARKS
-//    private void addFriendCheckmarks() {
-//        Log.d(TAG,"addFriendCheckmarks");
-//        mFriendsRelation.getQuery().findInBackground(new FindCallback<User>() {
-//            @Override
-//            public void done(List<User> friends, Exception e) {
-//                if (e == null) {
-//                    // list returned - look for a match
-//                    for (int i = 0; i < mUsers.size(); i++) {
-//                        User user = mUsers.get(i);
-//                        Log.d(TAG,"user is: " + user.getUsername());
-//                        for (User friend : friends) {
-//                            Log.d(TAG,"friend is: " + friend.getUsername());
-//                            if (friend.getObjectId().equals(user.getObjectId())) {
-//                                Log.d(TAG,"friend equals user");
-//                                mGridView.setItemChecked(i, true);
-//                            }
-//                        }
-//                    }
-//                } else {
-//                    Log.e(TAG, e.getMessage());
-//                }
-//            }
-//        });
-//    }
-
     protected OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
@@ -193,15 +137,15 @@ public class EditFriendsActivity extends Activity {
 
             if (mGridView.isItemChecked(position)) {
                 // add the friend
-                mFriendsRelation.add(mUsers.get(position));
+                mFriends.add(mUsers.get(position));
                 checkImageView.setVisibility(View.VISIBLE);
-                Log.d(TAG, "add user " + mUsers.get(position).getUsername() + " to mFriendRelation");
+                Log.d(TAG, "add user " + mUsers.get(position).getUsername() + " to mFriends");
 
             } else {
                 // remove the friend
-                mFriendsRelation.remove(mUsers.get(position));
+                mFriends.remove(mUsers.get(position));
                 checkImageView.setVisibility(View.INVISIBLE);
-                Log.d(TAG, "remove user " + mUsers.get(position).getUsername() + " from mFriendRelation");
+                Log.d(TAG, "remove user " + mUsers.get(position).getUsername() + " from mFriends");
             }
 
             mCurrentUser.saveInBackground(new SaveCallback() {
@@ -215,6 +159,7 @@ public class EditFriendsActivity extends Activity {
 
         }
     };
+
 }
 
 

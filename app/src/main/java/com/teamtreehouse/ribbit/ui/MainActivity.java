@@ -164,7 +164,7 @@ public class MainActivity extends FragmentActivity implements
      */
     ViewPager mViewPager;
 
-    ArrayList<User> mFriendsRelation;
+    ArrayList<User> mFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,8 +226,9 @@ public class MainActivity extends FragmentActivity implements
 
         if (resultCode == RESULT_OK) {
             if(requestCode == EDIT_FRIENDS_REQUEST){
-                mFriendsRelation = data.getParcelableArrayListExtra("FRIEND_LIST");
-                Log.d(TAG, "mFriendsRelation size in MainActivity is: " + mFriendsRelation.size());
+                mFriends = data.getParcelableArrayListExtra("FRIEND_LIST");
+                mSectionsPagerAdapter.mFriendsFragment.mFriends.addAll(mFriends);
+                Log.d(TAG, "mFriends size in MainActivity is: " + mFriends.size());
 
             }
 

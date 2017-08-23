@@ -18,6 +18,8 @@ import java.util.Locale;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     protected Context mContext;
+    public FriendsFragment mFriendsFragment = new FriendsFragment();
+    public InboxFragment mInboxFragment = new InboxFragment();
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
@@ -32,9 +34,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return new InboxFragment();
+//                return new InboxFragment();
+                return mInboxFragment;
             case 1:
-                return new FriendsFragment();
+                return mFriendsFragment;
         }
 
         return null;
