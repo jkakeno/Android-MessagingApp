@@ -137,7 +137,7 @@ public class EditFriendsActivity extends Activity{
             ImageView checkImageView = (ImageView) view.findViewById(R.id.checkImageView);
             Log.d(TAG,"User check state is: "+mUsers.get(position).state);
             Log.d(TAG,"Item is checked : "+mGridView.isItemChecked(position));
-            if (mGridView.isItemChecked(position)) {
+            if (!mUsers.get(position).state) {
 
                     // add the friend
                     mFriends.add(mUsers.get(position));
