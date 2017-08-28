@@ -18,6 +18,8 @@ import java.util.Locale;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     protected Context mContext;
+/*Make the fragments variables so that the adapter doesn't have to create fragments each time
+getItem is called*/
     public FriendsFragment mFriendsFragment = new FriendsFragment();
     public InboxFragment mInboxFragment = new InboxFragment();
 
@@ -26,28 +28,25 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         mContext = context;
     }
 
+// getItem is called to instantiate the fragment for the given page.
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a DummySectionFragment (defined as a static inner class
-        // below) with the page number as its lone argument.
-
         switch (position) {
             case 0:
-//                return new InboxFragment();
                 return mInboxFragment;
             case 1:
                 return mFriendsFragment;
         }
-
         return null;
     }
 
+//There's only two fragments to be populated in this adapter so the return is 2.
     @Override
     public int getCount() {
         return 2;
     }
 
+//Set the title of the tabs.
     @Override
     public CharSequence getPageTitle(int position) {
         Locale l = Locale.getDefault();
@@ -57,9 +56,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return mContext.getString(R.string.title_section2).toUpperCase(l);
         }
-        return null;
+        return null; //We'll use icon instead so return null.
     }
 
+//Set the icon of the tabs.
     public int getIcon(int position) {
         switch (position) {
             case 0:
@@ -67,7 +67,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return R.drawable.ic_tab_friends;
         }
-
         return R.drawable.ic_tab_inbox;
     }
 }

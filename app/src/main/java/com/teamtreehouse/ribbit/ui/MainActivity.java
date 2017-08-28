@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.teamtreehouse.ribbit.R;
 import com.teamtreehouse.ribbit.adapters.SectionsPagerAdapter;
+import com.teamtreehouse.ribbit.models.Message;
 import com.teamtreehouse.ribbit.models.User;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -31,10 +32,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-/*Send data between activity resource: https://stackoverflow.com/questions/920306/sending-data-back-to-the-main-activity-in-android/40969871#40969871*/
+/*Send data between activity resource:
+https://stackoverflow.com/questions/920306/sending-data-back-to-the-main-activity-in-android/40969871#40969871*/
 
-public class MainActivity extends FragmentActivity implements
-        ActionBar.TabListener {
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -42,14 +43,10 @@ public class MainActivity extends FragmentActivity implements
     public static final int TAKE_VIDEO_REQUEST = 1;
     public static final int PICK_PHOTO_REQUEST = 2;
     public static final int PICK_VIDEO_REQUEST = 3;
-
     public static final int MEDIA_TYPE_IMAGE = 4;
     public static final int MEDIA_TYPE_VIDEO = 5;
-
     public static final int EDIT_FRIENDS_REQUEST = 6;
-
     public static final int FILE_SIZE_LIMIT = 1024 * 1024 * 10; // 10 MB
-
 
     protected Uri mMediaUri;
 
@@ -134,7 +131,6 @@ public class MainActivity extends FragmentActivity implements
                                     mediaStorageDir.getAbsolutePath() + fileName + fileType);
                         }
                     }
-
                     // something went wrong
                     return null;
                 }
@@ -182,22 +178,19 @@ public class MainActivity extends FragmentActivity implements
             Log.i(TAG, currentUser.getUsername());
         }
 
-        // Set up the action bar.
+// Set up the action bar.
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the app.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(this,
-                getSupportFragmentManager());
+// Create the adapter that will return a fragment for each of the three primary sections of the app.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(this,getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
+// Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        // When swiping between different sections, select the corresponding
-        // tab. We can also use ActionBar.Tab#select() to do this if we have
-        // a reference to the Tab.
+// When swiping between different sections, select the corresponding tab.
+// We can also use ActionBar.Tab#select() to do this if we have a reference to the Tab.
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                     @Override
                     public void onPageSelected(int position) {
@@ -205,31 +198,30 @@ public class MainActivity extends FragmentActivity implements
                     }
                 });
 
-        // For each of the sections in the app, add a tab to the action bar.
+// For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            // Create a tab with text corresponding to the page title defined by
-            // the adapter. Also specify this Activity object, which implements
-            // the TabListener interface, as the callback (listener) for when
-            // this tab is selected.
+// Create a tab with mTextEditText corresponding to the page title defined by the adapter.
+// Also specify this Activity object, which implements the TabListener interface,
+// as the callback (listener) for when this tab is selected.
             actionBar.addTab(actionBar.newTab()
                     .setIcon(mSectionsPagerAdapter.getIcon(i))
                     .setTabListener(this));
         }
     }
 
+//Execute the correspondent code block depending on the result of the intent.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG,"onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG,"Request code is: " + requestCode);
-        Log.d(TAG,"Result code is: " + resultCode);
 
         if (resultCode == RESULT_OK) {
+
             if(requestCode == EDIT_FRIENDS_REQUEST){
+//Get the list stored in FRIEND_LIST and pass it to the fragments in the section adapter.
                 mFriends = data.getParcelableArrayListExtra("FRIEND_LIST");
                 mSectionsPagerAdapter.mFriendsFragment.mFriends.addAll(mFriends);
-                Log.d(TAG, "mFriends size in MainActivity is: " + mFriends.size());
-
+                mSectionsPagerAdapter.mInboxFragment.mFriends.addAll(mFriends);
             }
 
             if (requestCode == PICK_PHOTO_REQUEST || requestCode == PICK_VIDEO_REQUEST) {
@@ -238,13 +230,11 @@ public class MainActivity extends FragmentActivity implements
                 } else {
                     mMediaUri = data.getData();
                 }
-
                 Log.i(TAG, "Media URI: " + mMediaUri);
                 if (requestCode == PICK_VIDEO_REQUEST) {
-                    // make sure the file is less than 10 MB
+// make sure the file is less than 10 MB
                     int fileSize = 0;
                     InputStream inputStream = null;
-
                     try {
                         inputStream = getContentResolver().openInputStream(mMediaUri);
                         fileSize = inputStream.available();
@@ -259,7 +249,6 @@ public class MainActivity extends FragmentActivity implements
                             inputStream.close();
                         } catch (IOException e) { /* Intentionally blank */ }
                     }
-
                     if (fileSize >= FILE_SIZE_LIMIT) {
                         Toast.makeText(this, R.string.error_file_size_too_large, Toast.LENGTH_LONG).show();
                         return;
@@ -271,21 +260,32 @@ public class MainActivity extends FragmentActivity implements
                 sendBroadcast(mediaScanIntent);
             }
 
-//            Intent recipientsIntent = new Intent(this, RecipientsActivity.class);
-//            recipientsIntent.setData(mMediaUri);
-//            String fileType;
-//            if (requestCode == PICK_PHOTO_REQUEST || requestCode == TAKE_PHOTO_REQUEST) {
-//                fileType = Message.TYPE_IMAGE;
-//            } else {
-//                fileType = Message.TYPE_VIDEO;
-//            }
-//            recipientsIntent.putExtra(Message.KEY_FILE_TYPE, fileType);
-//            startActivity(recipientsIntent);
+            String fileType;
+            if (requestCode == PICK_PHOTO_REQUEST || requestCode == TAKE_PHOTO_REQUEST) {
+                fileType = Message.TYPE_IMAGE;
+                selectRecipient(fileType);
+            }
+
+            if(requestCode == PICK_VIDEO_REQUEST || requestCode == TAKE_VIDEO_REQUEST){
+                fileType = Message.TYPE_VIDEO;
+                selectRecipient(fileType);
+            }
+
 
         } else if (resultCode == RESULT_CANCELED) {
             Toast.makeText(this, R.string.general_error, Toast.LENGTH_LONG).show();
         }
     }
+
+    private void selectRecipient(String fileType) {
+//Pass the message file type and the list of friends to the recipient activity
+        Intent recipientsIntent = new Intent(this, RecipientsActivity.class);
+        recipientsIntent.setData(mMediaUri);
+        recipientsIntent.putExtra(Message.KEY_FILE_TYPE, fileType);
+        recipientsIntent.putExtra("FRIEND_LIST", mFriends);
+        startActivity(recipientsIntent);
+    }
+
 //Disable "back" in the fragments
     @Override
     public void onBackPressed() {
@@ -297,17 +297,17 @@ public class MainActivity extends FragmentActivity implements
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish(); //Finishing the activity causes the app to close because there's no activity to move to after pressing back button in login screen
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(TAG,"onCreateOptionsMenu");
-        // Inflate the menu; this adds items to the action bar if it is present.
+// Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
+//Execute the correspondent block of code depending on the item selected from menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG,"onOptionsItemSelected");
@@ -319,10 +319,13 @@ public class MainActivity extends FragmentActivity implements
                 navigateToLogin();
                 break;
             case R.id.action_edit_friends:
+//Navigate to Edit Friends Activity and request results back. When Edit Friends Activity responds
+//the results shall be stored in EDIT_FRIENDS_REQUEST.
                 Intent intent = new Intent(this, EditFriendsActivity.class);
                 startActivityForResult(intent,EDIT_FRIENDS_REQUEST);
                 break;
             case R.id.action_camera:
+//Create a dialog with different choices
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setItems(R.array.camera_choices, mDialogListener);
                 AlertDialog dialog = builder.create();
@@ -336,8 +339,7 @@ public class MainActivity extends FragmentActivity implements
     @Override
     public void onTabSelected(ActionBar.Tab tab,FragmentTransaction fragmentTransaction) {
         Log.d(TAG,"onTabSelected");
-        // When the given tab is selected, switch to the corresponding page in
-        // the ViewPager.
+// When the given tab is selected, switch to the corresponding page in the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
     }
 

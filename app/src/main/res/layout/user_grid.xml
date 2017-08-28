@@ -3,22 +3,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context="com.teamtreehouse.ribbit.ui.FriendsFragment" >
-
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_purple_background">
     <GridView
         android:id="@+id/friendsGrid"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:horizontalSpacing="@dimen/user_grid_spacing"
         android:numColumns="auto_fit"
         android:columnWidth="90dp"
         android:stretchMode="columnWidth"
         android:verticalSpacing="@dimen/user_grid_spacing"
-        android:gravity="center"
-        android:layout_centerHorizontal="true" >
-    </GridView>
+        android:layout_weight="0.9"/>
+    <Button
+        android:id="@+id/send_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send"/>
+</LinearLayout>
 
     <TextView
         android:id="@android:id/empty"
@@ -26,5 +32,6 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/activity_horizontal_margin"
         android:text="@string/empty_friends_label" />
+
 
 </RelativeLayout>

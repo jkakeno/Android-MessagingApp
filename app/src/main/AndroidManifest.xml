@@ -71,7 +71,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamtreehouse.ribbit.ui.MainActivity" />
         </activity>
-        <activity android:name="com.teamtreehouse.ribbit.ui.SMSActivity"/>
+        <activity android:name="com.teamtreehouse.ribbit.ui.MessageActivity"/>
+        <activity android:name="com.teamtreehouse.ribbit.ui.RecipientEmailActivity"/>
 
     </application>
 

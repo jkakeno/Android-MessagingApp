@@ -26,7 +26,8 @@ public class User implements Comparable<User>,Parcelable {
     private String username;
     private String password;
     private String email;
-    public boolean state;
+//Variable to track user check state
+    public boolean isChecked;
 
     public User() {
         id = UUID.randomUUID();
@@ -175,12 +176,12 @@ public class User implements Comparable<User>,Parcelable {
         String compareUserName = ((User)another).getUsername();
         return this.getUsername().toLowerCase().compareTo(compareUserName.toLowerCase());
     }
-
+//Method to get the user checked state
     public boolean getCheckState() {
-        return state;
+        return isChecked;
     }
-
+//Method to set the user checked state
     public void setCheckState(boolean state){
-        this.state = state;
+        this.isChecked = state;
     }
 }

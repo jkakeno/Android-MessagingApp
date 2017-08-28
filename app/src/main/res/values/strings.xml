@@ -57,5 +57,7 @@
     <string name="content_desc_user_checkmark">User checkmark</string>
     <string name="push_message">You have a new Ribbit message from %s!</string>
     <string name="create_email">Create Email</string>
+    <string name="text_body_empty">Text body is empty.</string>
+    <string name="email_body_empty">Email is empty.</string>
 
 </resources>

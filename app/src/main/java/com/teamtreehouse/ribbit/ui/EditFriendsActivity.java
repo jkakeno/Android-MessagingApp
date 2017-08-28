@@ -26,14 +26,14 @@ import com.teamtreehouse.ribbit.models.callbacks.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+/*This class is called from main to handle the selection of users to be included in the friends list.*/
+
 public class EditFriendsActivity extends Activity{
+    public static final String TAG = EditFriendsActivity.class.getSimpleName();
 
     protected ArrayList<User> mFriends = new ArrayList<>();
     protected User mCurrentUser;
     protected GridView mGridView;
-
-    public static final String TAG = EditFriendsActivity.class.getSimpleName();
-
     protected List<User> mUsers;
 
     Button mConfirm;
@@ -43,23 +43,24 @@ public class EditFriendsActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
+/*Request rotating circle in top right corner in Actionbar
+which represent some background action to be included.*/
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.edit_friends);
-        // Show the Up button in the action bar.
+// Show the Up button in the action bar.
         setupActionBar();
-
+//Set up the grid view
         mGridView = (GridView) findViewById(R.id.friendsGrid);
         mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
         mGridView.setOnItemClickListener(mOnItemClickListener);
-
         TextView emptyTextView = (TextView) findViewById(android.R.id.empty);
         mGridView.setEmptyView(emptyTextView);
+//Set up confirm button
         mConfirm = (Button) findViewById(R.id.confirm_button);
-
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "mFriends size in EditFriendsActivity is : "+ mFriends.size());
+//Return the result back to main activity by storing the list of friends in FRIEND_LIST.
                 Intent intent = new Intent();
                 intent.putExtra("FRIEND_LIST", mFriends);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -73,11 +74,9 @@ public class EditFriendsActivity extends Activity{
     protected void onResume() {
         Log.d(TAG,"onResume");
         super.onResume();
-
         mCurrentUser = User.getCurrentUser();
-
         setProgressBarIndeterminateVisibility(true);
-
+//Create a query (list) of users. (Use a query as a way of storing data).
         Query<User> query = User.getQuery();
         query.orderByAscending(User.KEY_USERNAME);
         query.setLimit(1000);
@@ -86,9 +85,9 @@ public class EditFriendsActivity extends Activity{
             public void done(List<User> users, Exception e) {
                 setProgressBarIndeterminateVisibility(false);
                 if (e == null) {
-
                     // Success
                     mUsers = users;
+//Set the user adapter with the list of users
                     UserAdapter adapter = new UserAdapter(EditFriendsActivity.this, mUsers);
                     mGridView.setAdapter(adapter);
                 } else {
@@ -108,9 +107,7 @@ public class EditFriendsActivity extends Activity{
      * Set up the {@link android.app.ActionBar}.
      */
     private void setupActionBar() {
-
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     @Override
@@ -134,25 +131,26 @@ public class EditFriendsActivity extends Activity{
     protected OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+//Inflate the check image view
             ImageView checkImageView = (ImageView) view.findViewById(R.id.checkImageView);
-            Log.d(TAG,"User check state is: "+mUsers.get(position).state);
-            Log.d(TAG,"Item is checked : "+mGridView.isItemChecked(position));
-            if (!mUsers.get(position).state) {
-
-                    // add the friend
+/*If the user is not checked.
+NOTE: That the confition below points to a specific user defined by position of the grid clicked,
+since the list of user have been populated to the grid view each user occupies a specific grid.*/
+            if (!mUsers.get(position).isChecked) {
+//Add a user to the list of friends
                     mFriends.add(mUsers.get(position));
+//Set the check image visible
                     checkImageView.setVisibility(View.VISIBLE);
+//Set the user check state to true
                     mUsers.get(position).setCheckState(true);
-                    Log.d(TAG, "add user " + mUsers.get(position).getUsername() + " to mFriends");
             } else {
-
-                    // remove the friend
+//Remove a user from the list of friends
                     mFriends.remove(mUsers.get(position));
+//Set the check image invisible
                     checkImageView.setVisibility(View.INVISIBLE);
+//Set the user check state to false
                     mUsers.get(position).setCheckState(false);
-                    Log.d(TAG, "remove user " + mUsers.get(position).getUsername() + " from mFriends");
             }
-
             mCurrentUser.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(Exception e) {
@@ -161,10 +159,8 @@ public class EditFriendsActivity extends Activity{
                     }
                 }
             });
-
         }
     };
-
 }
 
 

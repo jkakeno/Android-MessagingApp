@@ -49,20 +49,6 @@ public class LoginActivityTest {
     }
 
     @Test
-    public void correctDialogIsDisplayedWhenNoPassword() throws Exception {
-        // Arrange
-        String passWord = "";
-        onView(withId(R.id.passwordField)).perform(typeText(passWord));
-
-        // Act
-        onView(withId(R.id.loginButton)).perform(click());
-
-        // Assert
-        onView(withText("Please make sure you enter a username and password!")).check(matches(isDisplayed()));
-        onView(withId(android.R.id.button1)).perform(click());
-    }
-
-    @Test
     public void userAbleToLogIn() throws Exception {
         // Arrange
         String userName = "Ben";

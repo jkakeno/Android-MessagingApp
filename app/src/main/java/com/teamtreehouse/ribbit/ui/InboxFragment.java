@@ -1,8 +1,11 @@
 package com.teamtreehouse.ribbit.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -10,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -22,6 +26,7 @@ import com.teamtreehouse.ribbit.models.Query;
 import com.teamtreehouse.ribbit.models.User;
 import com.teamtreehouse.ribbit.models.callbacks.FindCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -32,12 +37,15 @@ public class InboxFragment extends ListFragment {
     protected List<Message> mMessages;
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     ImageButton mFab;
+    protected ArrayList<User> mFriends = new ArrayList<>();
+    MessageAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
         Log.d(TAG,"onCreateView");
+//Inflate the root view for this fragment
         View rootView = inflater.inflate(R.layout.fragment_inbox, container, false);
-
+//Set the swipe refresh layout in the root view
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
         mSwipeRefreshLayout.setColorSchemeResources(
@@ -45,19 +53,19 @@ public class InboxFragment extends ListFragment {
                 R.color.swipeRefresh2,
                 R.color.swipeRefresh3,
                 R.color.swipeRefresh4);
-
-//        retrieveMessages();
-
+//Set the fab button
         mFab = (ImageButton) rootView.findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG,"Create text");
-                Intent intent = new Intent(getActivity(),SMSActivity.class);
+                Log.d(TAG,"Create message");
+//Get the friend list stored in the variable (mFriends) of the activity this fragment is
+//associated with and pass it to message activity.
+                Intent intent = new Intent(getActivity(),MessageActivity.class);
+                intent.putExtra("FRIEND_LIST", mFriends);
                 startActivity(intent);
             }
         });
-
         return rootView;
     }
 
@@ -76,46 +84,37 @@ public class InboxFragment extends ListFragment {
 
     private void retrieveMessages() {
         Log.d(TAG,"retrieveMessages");
-        Query<Message> query = Message.getQuery();
+
         int randomUserIndex = new Random().nextInt(MockUsers.testUsers.size());
         User user = MockUsers.testUsers.get(randomUserIndex);
+//Create a query (list) of messages. (Use a query as a way of storing data).
+        Query<Message> query = Message.getQuery();
         query.whereEqualTo(Message.KEY_RECIPIENT_IDS, user.getObjectId());
         query.addDescendingOrder(Message.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Message>() {
             @Override
             public void done(List<Message> messages, Exception e) {
                 getActivity().setProgressBarIndeterminateVisibility(false);
-
+//Set the swipe refresh layout.
                 if (mSwipeRefreshLayout.isRefreshing()) {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
 
                 if (e == null) {
-                    // We found messages!
-
+// We found messages!
                     mMessages = messages;
                     Log.d(TAG,"Found " + mMessages.size() + " messages");
-
+//Log the message id and sender name for all received messages.
                     String[] senderNames = new String[mMessages.size()];
                     int i = 0;
                     for (Message message : mMessages) {
                         senderNames[i] = message.getString(Message.KEY_SENDER_NAME);
                         i++;
-                        Log.d(TAG, "Message from: " + message.getString(Message.KEY_SENDER_NAME));
+                        Log.d(TAG, "Message from: " + message.getString(Message.KEY_SENDER_NAME)+ " Message Id: "+message.getId());
                     }
-
-                    MessageAdapter adapter = new MessageAdapter(getListView().getContext(), mMessages);
+//Set the message adapter, pass the message list.
+                    adapter = new MessageAdapter(getListView().getContext(), mMessages);
                     setListAdapter(adapter);
-
-/*Doesn't display messages*/
-//                    if (getListView().getAdapter() == null) {
-//                        Log.d(TAG, "List view adapter is " + getListView().getAdapter() + " so create adapter and fill it with " + mMessages.size() + " messages");
-//                        MessageAdapter adapter = new MessageAdapter(getListView().getContext(), mMessages);
-//                        setListAdapter(adapter);
-//                    }else{
-//                        Log.d(TAG, "Refill the adapter with " + mMessages.size() + " messages");
-//                        ((MessageAdapter) getListView().getAdapter()).refill(mMessages);
-//                    }
                 }
             }
         });
@@ -125,7 +124,8 @@ public class InboxFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d(TAG,"onListItemClick");
         super.onListItemClick(l, v, position, id);
-
+/*Get a specific message when clicked the position on the list view.
+Use this specific message to get message type and file.*/
         Message message = mMessages.get(position);
         String messageType = message.getString(Message.KEY_FILE_TYPE);
         MessageFile file = message.getFile(Message.KEY_FILE);
@@ -142,18 +142,6 @@ public class InboxFragment extends ListFragment {
             intent.setDataAndType(fileUri, "video/*");
             startActivity(intent);
         }
-
-        // Delete it!
-        List<String> ids = message.getList(Message.KEY_RECIPIENT_IDS);
-
-        if (ids.size() == 1) {
-            // last recipient - delete the whole thing!
-            message.deleteInBackground();
-        }
-        else {
-            // remove the recipient
-            message.removeRecipient(User.getCurrentUser().getObjectId());
-        }
     }
 
     protected OnRefreshListener mOnRefreshListener = new OnRefreshListener() {
@@ -162,6 +150,32 @@ public class InboxFragment extends ListFragment {
             retrieveMessages();
         }
     };
+
+//Delete a message on long click
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long l) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Would you like to delete this message from your inbox?")
+                        .setTitle("Delete Message")
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mMessages.remove(mMessages.get(position));
+                                setListAdapter(adapter);
+                                Log.d(TAG,"Number of messages: "+mMessages.size());
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel,null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                return true;
+            }
+        });
+    }
 }
 
 
